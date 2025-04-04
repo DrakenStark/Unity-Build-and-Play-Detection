@@ -51,6 +51,7 @@ namespace DrakenStark
         {
             //Debug.LogWarning("Build Prep Started!");
 
+            //Copy the below local variable and for loop for each script you need to have automation for.
             /*UdonSharpBehaviour[] allYourCustomUdonSharpScripts = FindObjectsOfType<UdonSharpBehaviour>(); // On this line, REMOVE the SLASH and ASTERISK and then change both "UdonSharpBehaviour" to the name of your custom Udon script.
             for (int eachScript = 0; eachScript < allYourCustomUdonSharpScripts.Length; eachScript++)
             {
