@@ -1,0 +1,79 @@
+using UnityEditor;
+using UnityEngine;
+using UnityEditor.Build.Reporting;
+using UnityEditor.Build;
+using UdonSharp;
+using VRC;
+
+namespace DrakenStark
+{
+    [InitializeOnLoad]
+    public class BuildAndPlayDetect : Object, IProcessSceneWithReport
+    {
+        //Regardless of multiple copies in the scene, On Build and Mode change, this should in theory only be run once.
+        //Go through everything that needs to be done in either in this class without worrying about doubled effort.
+
+        //Detect Build before entering Play Mode
+        static BuildAndPlayDetect()
+        {
+            EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
+        }
+
+        private static void OnPlayModeStateChanged(PlayModeStateChange state)
+        {
+            //Changes made in this function will persist after exiting Play mode.
+            /*if (state == PlayModeStateChange.ExitingEditMode)
+            {
+                //Debug.LogWarning("Play Build Process Detected!");
+            }*/
+
+            //Changes made in this function will revert after exiting Play mode.
+            if (state == PlayModeStateChange.EnteredPlayMode)
+            {
+                _finalizeForBuild();
+            }
+        }
+
+        //Detect Build when not entering Play Mode
+        public int callbackOrder => 0; //Lets Unity know that, during a build, this script will care where it falls in the order of scripts to run.
+        //public int callbackOrder { get; } //Lets Unity know that, during a build, this script will not care where it falls in the order of scripts to run.
+        public void OnProcessScene(UnityEngine.SceneManagement.Scene scene, BuildReport report)
+        {
+            if (!Application.isPlaying)
+            {
+                //Debug.LogWarning("Non-Play Build Process Detected!");
+                _finalizeForBuild();
+            }
+        }
+
+        //Code to run in either Build case
+        public static void _finalizeForBuild()
+        {
+            //Debug.LogWarning("Build Prep Started!");
+
+            //Create screenshot with a camera viewing the ReviewLocation.
+            /*UdonSharpBehaviour[] allYourCustomUdonSharpScripts = FindObjectsOfType<UdonSharpBehaviour>(); // On this line, REMOVE the SLASH and ASTERISK and then change both "UdonSharpBehaviour" to the name of your custom Udon script.
+            for (int eachScript = 0; eachScript < allYourCustomUdonSharpScripts.Length; eachScript++)
+            {
+                try
+                {
+                    // For eachScript, make changes as needed here. YOUR CODE WILL MOST LIKELY ONLY GO HERE after removing the area comment around this for loop.
+                    //Example: allCustomScripts[eachScript].SetProgramVariable("YourVariableName", YourVariableValue);
+
+                    //Save changes to the current custom script.
+                    allYourCustomUdonSharpScripts[eachScript].MarkDirty();
+                }
+                catch (System.Exception ex)
+                {
+                    Debug.LogException(ex, allYourCustomUdonSharpScripts[eachScript].gameObject);
+                }
+            }*/ // REMOVE the ASTERISK and SLASH on this line.
+
+            //Update the AssetDatabase so the new changes can be recognized.
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+
+            //Debug.LogWarning("Build Prep Finished!");
+        }
+    }
+}
