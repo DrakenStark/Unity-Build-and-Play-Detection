@@ -51,7 +51,6 @@ namespace DrakenStark
         {
             //Debug.LogWarning("Build Prep Started!");
 
-            //Create screenshot with a camera viewing the ReviewLocation.
             /*UdonSharpBehaviour[] allYourCustomUdonSharpScripts = FindObjectsOfType<UdonSharpBehaviour>(); // On this line, REMOVE the SLASH and ASTERISK and then change both "UdonSharpBehaviour" to the name of your custom Udon script.
             for (int eachScript = 0; eachScript < allYourCustomUdonSharpScripts.Length; eachScript++)
             {
